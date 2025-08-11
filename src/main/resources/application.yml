@@ -12,3 +12,14 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY}
       base-url: https://api.openai.com/v1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 1000
