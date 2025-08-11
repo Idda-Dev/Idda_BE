@@ -6,6 +6,7 @@ import capssungzzang._dayscottonball.domain.heart.domain.entity.Heart;
 import capssungzzang._dayscottonball.domain.letter.domain.entity.Letter;
 import capssungzzang._dayscottonball.domain.mission.domain.entity.Mission;
 import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
+import capssungzzang._dayscottonball.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

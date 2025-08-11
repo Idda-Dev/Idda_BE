@@ -3,6 +3,7 @@
     import capssungzzang._dayscottonball.domain.comment.domain.entity.Comment;
     import capssungzzang._dayscottonball.domain.heart.domain.entity.Heart;
     import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
+    import capssungzzang._dayscottonball.global.common.entity.BaseEntity;
     import jakarta.persistence.*;
     import lombok.AccessLevel;
     import lombok.Builder;
@@ -16,7 +17,7 @@
     @Inheritance(strategy = InheritanceType.JOINED)
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public class Post {
+    public class Post extends BaseEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

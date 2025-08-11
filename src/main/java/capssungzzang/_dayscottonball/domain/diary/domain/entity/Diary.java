@@ -2,6 +2,7 @@ package capssungzzang._dayscottonball.domain.diary.domain.entity;
 
 
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
+import capssungzzang._dayscottonball.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary {
+public class Diary extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
