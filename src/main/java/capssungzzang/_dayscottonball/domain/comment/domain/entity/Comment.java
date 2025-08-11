@@ -1,11 +1,11 @@
 package capssungzzang._dayscottonball.domain.comment.domain.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
+import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,31 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
+
+    @Builder
+    public Comment(Member member, Post post, Comment parent, String content) {
+        this.member = member;
+        this.post = post;
+        this.parent = parent;
+        this.content = content;
+    }
 }
