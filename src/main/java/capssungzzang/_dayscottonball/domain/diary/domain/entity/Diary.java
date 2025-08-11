@@ -1,4 +1,5 @@
-package capssungzzang._dayscottonball.domain.letter.domain.entity;
+package capssungzzang._dayscottonball.domain.diary.domain.entity;
+
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,11 +9,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Letter {
+public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column
+    private String emotion;
+
 }
