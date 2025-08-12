@@ -3,15 +3,19 @@ package capssungzzang._dayscottonball.domain.comment.application;
 import capssungzzang._dayscottonball.domain.comment.domain.entity.Comment;
 import capssungzzang._dayscottonball.domain.comment.domain.repository.CommentRepository;
 import capssungzzang._dayscottonball.domain.comment.dto.CommentCreateRequest;
+import capssungzzang._dayscottonball.domain.comment.dto.CommentResponse;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
 import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
 import capssungzzang._dayscottonball.domain.post.domain.repository.PostRepository;
+import capssungzzang._dayscottonball.domain.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +41,28 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         return commentRepository.save(comment).getId();
+    }
+
+    @Override
+    public List<CommentResponse> getAllComments(Long postId) {
+
+        if (!postRepository.existsById(postId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다.");
+        }
+
+        List<Comment> comments = commentRepository.findAllByPostIdWithMember(postId);
+
+        return comments.stream()
+                .map(comment -> {
+                    CommentResponse response = new CommentResponse();
+                    response.setMemberId(comment.getMember().getId());
+                    response.setPostId(comment.getPost().getId());
+                    response.setCommentId(comment.getId());
+                    response.setContent(comment.getContent());
+                    response.setCreatedAt(comment.getCreatedAt());
+                    response.setUpdatedAt(comment.getUpdatedAt());
+                    return response;
+                })
+                .toList();
     }
 }
