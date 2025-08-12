@@ -1,8 +1,6 @@
 package capssungzzang._dayscottonball.domain.post.api;
 
 import capssungzzang._dayscottonball.domain.post.application.PostService;
-import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
-import capssungzzang._dayscottonball.domain.post.domain.repository.PostRepository;
 import capssungzzang._dayscottonball.domain.post.dto.PostCreateRequest;
 import capssungzzang._dayscottonball.domain.post.dto.PostResponse;
 import capssungzzang._dayscottonball.domain.post.dto.PostUpdateRequest;
@@ -16,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class Postcontroller {
+public class PostController {
 
     private final PostService postService;
 
