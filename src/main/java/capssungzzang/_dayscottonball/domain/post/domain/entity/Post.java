@@ -37,14 +37,10 @@
         @Column(columnDefinition="TEXT")
         private String content;
 
-        @Column(nullable=false)
-        private int heartCount;
-
         @Builder
-        public Post(Member member, String title, String content, int heartCount) {
+        public Post(Member member, String title, String content) {
             this.member = member;
             this.title = title;
             this.content = content;
-            this.heartCount = heartCount;
         }
     }
