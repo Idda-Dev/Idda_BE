@@ -9,6 +9,8 @@
     import lombok.Builder;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
+    import org.hibernate.annotations.OnDelete;
+    import org.hibernate.annotations.OnDeleteAction;
 
     import java.util.ArrayList;
     import java.util.List;
@@ -26,6 +28,7 @@
 
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name = "member_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private Member member;
 
         @Column(nullable=false)
