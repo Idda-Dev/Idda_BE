@@ -5,11 +5,14 @@ import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepos
 import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
 import capssungzzang._dayscottonball.domain.post.domain.repository.PostRepository;
 import capssungzzang._dayscottonball.domain.post.dto.PostCreateRequest;
+import capssungzzang._dayscottonball.domain.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +35,22 @@ public class PostServiceImpl implements PostService {
                 .build();
 
         return postRepository.save(post).getId();
+    }
+
+    @Override
+    public List<PostResponse> getAllPosts() {
+
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponse response = new PostResponse();
+                    response.setMemberId(post.getMember().getId());
+                    response.setPostId(post.getId());
+                    response.setTitle(post.getTitle());
+                    response.setContent(post.getContent());
+                    return response;
+                })
+                .toList();
     }
 }
