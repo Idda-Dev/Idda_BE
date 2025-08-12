@@ -12,13 +12,13 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/{userId}/posts")
+    @PostMapping("/users/{userId}/posts")
     public ResponseEntity<Void> createPost(@RequestBody PostCreateRequest request,
                                            @PathVariable("userId") Long memberId) {
         Long postId = postService.createPost(memberId, request);
@@ -26,20 +26,20 @@ public class PostController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("{userId}/posts")
-    public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable("userId") Long memberId) {
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
         List<PostResponse> responses = postService.getAllPosts();
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("{userId}/posts/{postId}")
+    @GetMapping("/users/{userId}/posts/{postId}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable("userId") Long memberId,
                                                     @PathVariable("postId") Long postId) {
         PostResponse response = postService.getPostById(memberId, postId);
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{userId}/posts/{postId}")
+    @PatchMapping("/users/{userId}/posts/{postId}")
     public ResponseEntity<PostResponse> updatePost(
             @PathVariable("userId") Long memberId,
             @PathVariable("postId") Long postId,
@@ -48,7 +48,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{userId}/posts/{postId}")
+    @DeleteMapping("/users/{userId}/posts/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable("userId") Long memberId,
             @PathVariable("postId") Long postId) {
