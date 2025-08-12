@@ -104,4 +104,29 @@ public class CommentServiceImpl implements CommentService {
 
         return response;
     }
+
+    @Override
+    public void deleteComment(Long memberId, Long postId, Long commentId) {
+
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
+        }
+
+        if (!postRepository.existsById(postId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다.");
+        }
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."));
+
+        if (!comment.getPost().getId().equals(postId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다.");
+        }
+
+        if (!comment.getMember().getId().equals(memberId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "댓글 삭제 권한이 없습니다.");
+        }
+
+        commentRepository.delete(comment);
+    }
+
 }
