@@ -40,24 +40,6 @@ public class Member extends BaseEntity {
 
     public enum Band { A, B, C, D, E }
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Heart> hearts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Letter> letters = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Diary> diaries = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Mission> missions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
-
     @Builder
     public Member(String nickname, int candy, int level, Band band) {
         this.nickname = nickname;

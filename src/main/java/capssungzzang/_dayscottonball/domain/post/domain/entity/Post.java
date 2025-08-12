@@ -40,12 +40,6 @@
         @Column(nullable=false)
         private int heartCount;
 
-        @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-        private List<Comment> comments = new ArrayList<>();
-
-        @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-        private List<Heart> hearts = new ArrayList<>();
-
         @Builder
         public Post(Member member, String title, String content, int heartCount) {
             this.member = member;
