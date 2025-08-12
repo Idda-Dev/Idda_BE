@@ -5,6 +5,7 @@ import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
 import capssungzzang._dayscottonball.domain.post.domain.repository.PostRepository;
 import capssungzzang._dayscottonball.domain.post.dto.PostCreateRequest;
 import capssungzzang._dayscottonball.domain.post.dto.PostResponse;
+import capssungzzang._dayscottonball.domain.post.dto.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,16 @@ public class Postcontroller {
     public ResponseEntity<PostResponse> getPostById(@PathVariable("userId") Long memberId,
                                                     @PathVariable("postId") Long postId) {
         PostResponse response = postService.getPostById(memberId, postId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{userId}/posts/{postId}")
+    public ResponseEntity<PostResponse> updatePost(
+            @PathVariable("userId") Long memberId,
+            @PathVariable("postId") Long postId,
+            @RequestBody PostUpdateRequest request) {
+
+        PostResponse response = postService.updatePost(memberId, postId, request);
         return ResponseEntity.ok(response);
     }
 }
