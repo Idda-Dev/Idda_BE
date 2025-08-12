@@ -23,3 +23,16 @@ spring:
         format_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 1000
+
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+app:
+  s3:
+    bucket: capssungzzang-bucket
+    public-read: true
