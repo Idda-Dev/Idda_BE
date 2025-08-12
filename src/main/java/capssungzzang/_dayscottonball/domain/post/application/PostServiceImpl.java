@@ -58,8 +58,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse getPostById(Long memberId,  Long postId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
+        }
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
@@ -77,8 +78,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse updatePost(Long memberId, Long postId, PostUpdateRequest request) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
+        }
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
@@ -107,8 +109,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(Long memberId, Long postId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
+        }
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
