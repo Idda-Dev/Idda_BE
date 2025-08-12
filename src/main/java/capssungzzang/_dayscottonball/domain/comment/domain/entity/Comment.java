@@ -31,10 +31,6 @@ public class Comment extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
@@ -42,7 +38,6 @@ public class Comment extends BaseEntity {
     public Comment(Member member, Post post, Comment parent, String content) {
         this.member = member;
         this.post = post;
-        this.parent = parent;
         this.content = content;
     }
 }
