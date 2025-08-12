@@ -29,7 +29,7 @@ public class VerificationPost extends Post {
     @Builder(builderMethodName = "verificationBuilder")
     public VerificationPost(Member member, String title, String content,
                             String photoUrl, String location, Mission mission) {
-        super(member, title, content, 0); // 인증글은 기본 좋아요 0으로 생성
+        super(member, title, content); // 인증글은 기본 좋아요 0으로 생성
         this.photoUrl = photoUrl;
         this.location = location;
         this.mission = mission;
