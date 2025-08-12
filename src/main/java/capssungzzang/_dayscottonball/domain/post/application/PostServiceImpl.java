@@ -53,4 +53,23 @@ public class PostServiceImpl implements PostService {
                 })
                 .toList();
     }
+
+    @Override
+    public PostResponse getPostById(Long memberId,  Long postId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
+
+        PostResponse response = new PostResponse();
+
+        response.setMemberId(post.getMember().getId());
+        response.setPostId(post.getId());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+
+        return response;
+    }
 }
