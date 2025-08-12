@@ -12,5 +12,5 @@ public interface PostService {
     List<PostResponse> getAllPosts();
     PostResponse getPostById(Long memberId, Long postId);
     PostResponse updatePost(Long memberId, Long postId, PostUpdateRequest request);
-//    void deletePost(Long postId, Long memberId);
+    void deletePost(Long memberId, Long postId);
 }

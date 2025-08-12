@@ -104,4 +104,20 @@ public class PostServiceImpl implements PostService {
         return response;
     }
 
+    @Override
+    public void deletePost(Long memberId, Long postId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "게시글 삭제 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
+    }
+
 }
