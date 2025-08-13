@@ -1,5 +1,6 @@
 package capssungzzang._dayscottonball.domain.post.application;
 
+import capssungzzang._dayscottonball.domain.heart.domain.repository.HeartRepository;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
 import capssungzzang._dayscottonball.domain.post.domain.entity.Post;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final HeartRepository heartRepository;
 
     @Override
     public Long createPost(Long memberId, PostCreateRequest request) {
@@ -43,6 +47,17 @@ public class PostServiceImpl implements PostService {
 
         List<Post> posts = postRepository.findAll();
 
+        List<Long> postIds = posts.stream().map(Post::getId).toList();
+
+        final Map<Long, Long> likeCountMap =
+                postIds.isEmpty()
+                        ? Map.of()
+                        : heartRepository.countGroupByPostIds(postIds).stream()
+                        .collect(Collectors.toMap(
+                                HeartRepository.PostLikeCount::getPostId,
+                                HeartRepository.PostLikeCount::getLikeCount
+                        ));
+
         return posts.stream()
                 .map(post -> {
                     PostResponse response = new PostResponse();
@@ -50,6 +65,9 @@ public class PostServiceImpl implements PostService {
                     response.setPostId(post.getId());
                     response.setTitle(post.getTitle());
                     response.setContent(post.getContent());
+                    response.setLikes(likeCountMap.getOrDefault(post.getId(), 0L)); // ★ 좋아요 수 세팅
+                    response.setCreatedAt(post.getCreatedAt());
+                    response.setUpdatedAt(post.getUpdatedAt());
                     return response;
                 })
                 .toList();
@@ -71,6 +89,9 @@ public class PostServiceImpl implements PostService {
         response.setPostId(post.getId());
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
+        response.setLikes(heartRepository.countByPostId(postId));
+        response.setCreatedAt(post.getCreatedAt());
+        response.setUpdatedAt(post.getUpdatedAt());
 
         return response;
     }
@@ -102,6 +123,9 @@ public class PostServiceImpl implements PostService {
         response.setPostId(post.getId());
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
+        response.setLikes(heartRepository.countByPostId(postId));
+        response.setCreatedAt(post.getCreatedAt());
+        response.setUpdatedAt(post.getUpdatedAt());
 
         return response;
     }
