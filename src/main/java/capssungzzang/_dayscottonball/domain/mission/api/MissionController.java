@@ -1,0 +1,25 @@
+package capssungzzang._dayscottonball.domain.mission.api;
+
+
+import capssungzzang._dayscottonball.domain.mission.application.MissionService;
+import capssungzzang._dayscottonball.domain.mission.dto.MissionResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class MissionController {
+
+    private final MissionService missionService;
+
+    @GetMapping("/users/{userId}/missions")
+    public ResponseEntity<MissionResponse> getMission(@PathVariable("userId") Long memberId,
+                                                      @RequestParam("date") LocalDate date) {
+
+        MissionResponse response = missionService.getMission(memberId, date);
+        return ResponseEntity.ok(response);
+    }
+}
