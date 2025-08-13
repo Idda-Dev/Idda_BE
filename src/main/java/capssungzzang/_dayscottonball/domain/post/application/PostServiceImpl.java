@@ -118,6 +118,8 @@ public class PostServiceImpl implements PostService {
             post.updateContent(request.getContent());
         }
 
+        postRepository.flush();
+
         PostResponse response = new PostResponse();
         response.setMemberId(post.getMember().getId());
         response.setPostId(post.getId());
