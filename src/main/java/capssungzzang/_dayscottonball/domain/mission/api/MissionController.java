@@ -2,6 +2,7 @@ package capssungzzang._dayscottonball.domain.mission.api;
 
 
 import capssungzzang._dayscottonball.domain.mission.application.MissionService;
+import capssungzzang._dayscottonball.domain.mission.dto.MissionAchievementResponse;
 import capssungzzang._dayscottonball.domain.mission.dto.MissionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,17 @@ public class MissionController {
     @GetMapping("/users/{userId}/missions")
     public ResponseEntity<MissionResponse> getMission(@PathVariable("userId") Long memberId,
                                                       @RequestParam("date") LocalDate date) {
-
         MissionResponse response = missionService.getMission(memberId, date);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/users/{userId}/missions/achievements")
+    public ResponseEntity<MissionAchievementResponse> getAchievementDays(
+            @PathVariable("userId") Long userId,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        MissionAchievementResponse response = missionService.getAchievementDates(userId, year, month);
         return ResponseEntity.ok(response);
     }
 }
