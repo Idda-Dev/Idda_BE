@@ -33,8 +33,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     @Override
     public List<VerificationPostResponse> getAllVerificationPosts() {
 
-        List<VerificationPostRepository.PostWithLikes> rows =
-                verificationPostRepository.findAllOrderByLikesDesc();
+        List<VerificationPostRepository.PostWithHearts> rows =
+                verificationPostRepository.findAllOrderByHeartsDesc();
 
         return rows.stream().map(row -> {
             VerificationPost verificationPost = row.getPost();
@@ -47,7 +47,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             response.setContent(verificationPost.getContent());
             response.setPhotoUrl(verificationPost.getPhotoUrl());
             response.setLocation(verificationPost.getLocation());
-            response.setLikes(row.getLikes());
+            response.setHearts(row.getHearts());
             response.setCreatedAt(verificationPost.getCreatedAt());
             response.setUpdatedAt(verificationPost.getUpdatedAt());
             return response;
@@ -69,7 +69,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         response.setContent(verificationPost.getContent());
         response.setPhotoUrl(verificationPost.getPhotoUrl());
         response.setLocation(verificationPost.getLocation());
-        response.setLikes(heartRepository.countByPostId(postId));
+        response.setHearts(heartRepository.countByPostId(postId));
         response.setCreatedAt(verificationPost.getCreatedAt());
         response.setUpdatedAt(verificationPost.getUpdatedAt());
         return response;

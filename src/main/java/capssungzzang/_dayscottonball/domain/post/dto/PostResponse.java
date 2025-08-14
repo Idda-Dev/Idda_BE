@@ -12,7 +12,7 @@ public class PostResponse {
     private Long postId;
     private String title;
     private String content;
-    private long likes;
+    private long hearts;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

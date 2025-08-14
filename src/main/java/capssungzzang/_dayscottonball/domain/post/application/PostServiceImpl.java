@@ -42,35 +42,22 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(post).getId();
     }
 
-    @Override
     public List<PostResponse> getAllPosts() {
 
-        List<Post> posts = postRepository.findAll();
+        List<PostRepository.PostWithHearts> rows = postRepository.findAllNormalOrderByHeartsDesc();
 
-        List<Long> postIds = posts.stream().map(Post::getId).toList();
-
-        final Map<Long, Long> likeCountMap =
-                postIds.isEmpty()
-                        ? Map.of()
-                        : heartRepository.countGroupByPostIds(postIds).stream()
-                        .collect(Collectors.toMap(
-                                HeartRepository.PostLikeCount::getPostId,
-                                HeartRepository.PostLikeCount::getLikeCount
-                        ));
-
-        return posts.stream()
-                .map(post -> {
-                    PostResponse response = new PostResponse();
-                    response.setMemberId(post.getMember().getId());
-                    response.setPostId(post.getId());
-                    response.setTitle(post.getTitle());
-                    response.setContent(post.getContent());
-                    response.setLikes(likeCountMap.getOrDefault(post.getId(), 0L)); // ★ 좋아요 수 세팅
-                    response.setCreatedAt(post.getCreatedAt());
-                    response.setUpdatedAt(post.getUpdatedAt());
-                    return response;
-                })
-                .toList();
+        return rows.stream().map(row -> {
+            var p = row.getPost();
+            PostResponse res = new PostResponse();
+            res.setMemberId(p.getMember().getId());
+            res.setPostId(p.getId());
+            res.setTitle(p.getTitle());
+            res.setContent(p.getContent());
+            res.setHearts(row.getHearts());
+            res.setCreatedAt(p.getCreatedAt());
+            res.setUpdatedAt(p.getUpdatedAt());
+            return res;
+        }).toList();
     }
 
     @Override
@@ -89,7 +76,7 @@ public class PostServiceImpl implements PostService {
         response.setPostId(post.getId());
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
-        response.setLikes(heartRepository.countByPostId(postId));
+        response.setHearts(heartRepository.countByPostId(postId));
         response.setCreatedAt(post.getCreatedAt());
         response.setUpdatedAt(post.getUpdatedAt());
 
@@ -125,7 +112,7 @@ public class PostServiceImpl implements PostService {
         response.setPostId(post.getId());
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
-        response.setLikes(heartRepository.countByPostId(postId));
+        response.setHearts(heartRepository.countByPostId(postId));
         response.setCreatedAt(post.getCreatedAt());
         response.setUpdatedAt(post.getUpdatedAt());
 
