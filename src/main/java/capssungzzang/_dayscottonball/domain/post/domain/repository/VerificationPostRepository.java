@@ -17,16 +17,16 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
     Optional<VerificationPost> findById(@NonNull Long id);
 
     @Query("""
-        select vp as post, coalesce(count(h), 0) as likes
+        select vp as post, coalesce(count(h.id), 0) as hearts
         from VerificationPost vp
         left join Heart h on h.post = vp
         group by vp
-        order by count(h) desc, vp.createdAt desc
+        order by count(h.id) desc, vp.createdAt desc
     """)
-    List<PostWithLikes> findAllOrderByLikesDesc();
+    List<PostWithHearts> findAllOrderByHeartsDesc();
 
-    interface PostWithLikes {
+    interface PostWithHearts {
         VerificationPost getPost();
-        long getLikes();
+        long getHearts();
     }
 }
