@@ -25,7 +25,7 @@ public class Coupon extends BaseEntity {
     private String title;
 
     @Column(nullable = false)
-    private String price;
+    private int price;
 
     @Column
     private Integer maxCount;
@@ -34,7 +34,7 @@ public class Coupon extends BaseEntity {
     private int issuedCount;
 
     @Builder
-    public Coupon(Store store, String title, String price, Integer maxCount, int issuedCount) {
+    public Coupon(Store store, String title, int price, Integer maxCount, int issuedCount) {
         this.store = store;
         this.title = title;
         this.price = price;
