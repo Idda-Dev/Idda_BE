@@ -4,6 +4,7 @@ import capssungzzang._dayscottonball.domain.coupon.domain.entity.Coupon;
 import capssungzzang._dayscottonball.domain.coupon.domain.entity.MemberCoupon;
 import capssungzzang._dayscottonball.domain.coupon.domain.repository.CouponRepository;
 import capssungzzang._dayscottonball.domain.coupon.domain.repository.MemberCouponRepository;
+import capssungzzang._dayscottonball.domain.coupon.dto.CouponResponse;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,5 +55,23 @@ public class CouponServiceImpl implements CouponService {
 
         return newCoupon.getId();
     }
+
+    @Override
+    public List<CouponResponse> getAllCoupons() {
+        List<Coupon> coupons = couponRepository.findAllWithStore();
+        return coupons.stream()
+                .map(coupon -> {
+                    CouponResponse response = new CouponResponse();
+                    response.setCouponId(coupon.getId());
+                    response.setStoreName(coupon.getStore().getName());
+                    response.setTitle(coupon.getTitle());
+                    response.setPrice(coupon.getPrice());
+                    response.setMaxCount(coupon.getMaxCount());
+                    response.setIssuedCount(coupon.getIssuedCount());
+                    return response;
+                })
+                .toList();
+    }
+
 
 }
