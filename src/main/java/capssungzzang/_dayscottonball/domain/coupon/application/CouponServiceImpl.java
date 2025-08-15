@@ -5,6 +5,7 @@ import capssungzzang._dayscottonball.domain.coupon.domain.entity.MemberCoupon;
 import capssungzzang._dayscottonball.domain.coupon.domain.repository.CouponRepository;
 import capssungzzang._dayscottonball.domain.coupon.domain.repository.MemberCouponRepository;
 import capssungzzang._dayscottonball.domain.coupon.dto.CouponResponse;
+import capssungzzang._dayscottonball.domain.coupon.dto.MemberCouponResponse;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,23 @@ public class CouponServiceImpl implements CouponService {
                     response.setPrice(coupon.getPrice());
                     response.setMaxCount(coupon.getMaxCount());
                     response.setIssuedCount(coupon.getIssuedCount());
+                    return response;
+                })
+                .toList();
+    }
+
+    @Override
+    public List<MemberCouponResponse> getAllMemberCoupons(Long memberId) {
+        return memberCouponRepository.findAllByMemberIdOrderByIdDesc(memberId)
+                .stream()
+                .map(memberCoupon -> {
+                    MemberCouponResponse response = new MemberCouponResponse();
+                    response.setMemberCouponId(memberCoupon.getId());
+                    response.setCouponId(memberCoupon.getCoupon().getId());
+                    response.setStoreName(memberCoupon.getCoupon().getStore().getName());
+                    response.setTitle(memberCoupon.getCoupon().getTitle());
+                    response.setStatus(memberCoupon.getStatus().name());
+                    response.setExpiresAt(memberCoupon.getExpiresAt());
                     return response;
                 })
                 .toList();

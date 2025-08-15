@@ -3,6 +3,7 @@ package capssungzzang._dayscottonball.domain.coupon.api;
 import capssungzzang._dayscottonball.domain.coupon.application.CouponService;
 import capssungzzang._dayscottonball.domain.coupon.domain.entity.Coupon;
 import capssungzzang._dayscottonball.domain.coupon.dto.CouponResponse;
+import capssungzzang._dayscottonball.domain.coupon.dto.MemberCouponResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,4 +30,11 @@ public class CouponController {
         List<CouponResponse> responses =  couponService.getAllCoupons();
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/users/{userId}/coupons")
+    public ResponseEntity<List<MemberCouponResponse>> getAllMemberCoupons(@PathVariable("userId") Long memberId) {
+        List<MemberCouponResponse> responses =  couponService.getAllMemberCoupons(memberId);
+        return ResponseEntity.ok(responses);
+    }
+
 }

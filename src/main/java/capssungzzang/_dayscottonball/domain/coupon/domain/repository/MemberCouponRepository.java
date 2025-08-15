@@ -1,6 +1,7 @@
 package capssungzzang._dayscottonball.domain.coupon.domain.repository;
 
 import capssungzzang._dayscottonball.domain.coupon.domain.entity.MemberCoupon;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,9 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
     Optional<MemberCoupon> findByIdAndMemberId(Long id, Long memberId);
 
     List<MemberCoupon> findAllByMemberId(Long memberId);
+
+    @EntityGraph(attributePaths = {"coupon", "coupon.store"})
+    List<MemberCoupon> findAllByMemberIdOrderByIdDesc(Long memberId);
 
 //    @Modifying
 //    @Query(value = """
