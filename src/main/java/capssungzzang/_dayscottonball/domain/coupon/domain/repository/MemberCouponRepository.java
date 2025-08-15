@@ -15,15 +15,15 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
 
     List<MemberCoupon> findAllByMemberId(Long memberId);
 
-    @Modifying
-    @Query(value = """
-        UPDATE member_coupon
-        SET status = 'USED', used_at = NOW()
-        WHERE id = :memberCouponId
-          AND member_id = :memberId
-          AND status = 'CLAIMED'
-          AND expires_at >= NOW()
-        """, nativeQuery = true)
-    int tryRedeem(@Param("memberId") Long memberId,
-                  @Param("memberCouponId") Long memberCouponId);
+//    @Modifying
+//    @Query(value = """
+//        UPDATE member_coupon
+//        SET status = 'USED', used_at = NOW()
+//        WHERE id = :memberCouponId
+//          AND member_id = :memberId
+//          AND status = 'CLAIMED'
+//          AND expires_at >= NOW()
+//        """, nativeQuery = true)
+//    int tryRedeem(@Param("memberId") Long memberId,
+//                  @Param("memberCouponId") Long memberCouponId);
 }

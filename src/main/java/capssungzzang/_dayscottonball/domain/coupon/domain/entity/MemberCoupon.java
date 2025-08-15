@@ -41,8 +41,8 @@ public class MemberCoupon extends BaseEntity {
     @Column
     private LocalDateTime expiresAt;
 
-    @Column
-    private LocalDateTime usedAt;
+//    @Column
+//    private LocalDateTime usedAt;
 
 
     public enum Status { CLAIMED, USED, EXPIRED }
