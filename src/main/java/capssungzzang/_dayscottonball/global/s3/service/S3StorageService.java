@@ -65,4 +65,31 @@ public class S3StorageService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 실패", e);
         }
     }
+
+    public String uploadBytes(byte[] bytes, String key, String contentType, String cacheControl) {
+        try (var in = new java.io.ByteArrayInputStream(bytes)) {
+            ObjectMetadata md = ObjectMetadata.builder()
+                    .contentType(contentType)
+                    .cacheControl(cacheControl)
+                    .build();
+
+            s3Template.upload(bucket, key, in, md);
+
+            if (publicRead) {
+                return "https://%s.s3.%s.amazonaws.com/%s".formatted(bucket, region, key);
+            } else {
+                return s3Template.createSignedGetURL(bucket, key, Duration.ofMinutes(15)).toString();
+            }
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "S3 업로드 실패", e);
+        }
+    }
+
+    public String uploadQrPng(Long memberCouponId, byte[] pngBytes, boolean deterministicKey) {
+        String key = deterministicKey
+                ? "qr/%d.png".formatted(memberCouponId)
+                : "qr/%s.png".formatted(UUID.randomUUID().toString().replace("-", ""));
+
+        return uploadBytes(pngBytes, key, "image/png", "public, max-age=300");
+    }
 }
