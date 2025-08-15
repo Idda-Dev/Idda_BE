@@ -1,7 +1,7 @@
 package capssungzzang._dayscottonball.domain.coupon.api;
 
 import capssungzzang._dayscottonball.domain.coupon.application.CouponService;
-import capssungzzang._dayscottonball.domain.coupon.domain.entity.Coupon;
+import capssungzzang._dayscottonball.domain.coupon.dto.CouponQRResponse;
 import capssungzzang._dayscottonball.domain.coupon.dto.CouponResponse;
 import capssungzzang._dayscottonball.domain.coupon.dto.MemberCouponResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +35,13 @@ public class CouponController {
     public ResponseEntity<List<MemberCouponResponse>> getAllMemberCoupons(@PathVariable("userId") Long memberId) {
         List<MemberCouponResponse> responses =  couponService.getAllMemberCoupons(memberId);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/users/{userId}/my-coupons/{memberCouponId}/qr")
+    public ResponseEntity<CouponQRResponse> getQrUrl(@PathVariable("userId") Long memberId,
+                                                     @PathVariable Long memberCouponId) {
+        CouponQRResponse response = couponService.generateAndUploadQrUrl(memberId, memberCouponId, true);
+        return ResponseEntity.ok(response);
     }
 
 }
