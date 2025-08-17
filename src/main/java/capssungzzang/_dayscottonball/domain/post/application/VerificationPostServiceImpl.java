@@ -76,20 +76,20 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     }
 
     @Override
-    public Long createVerificationPost(Long userId, Long missionId,
+    public Long createVerificationPost(Long memberId, Long missionId,
                                            VerificationPostCreateRequest request,
                                            MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사진은 필수입니다.");
         }
 
-        Member member = memberRepository.findById(userId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "미션이 존재하지 않습니다."));
 
         String photoUrl = s3StorageService.uploadImage(
-                file, String.format("verification/missions/%d/users/%d", missionId, userId));
+                file, String.format("verification/missions/%d/users/%d", missionId, memberId));
 
         VerificationPost verificationPost = VerificationPost.verificationBuilder()
                 .member(member)
