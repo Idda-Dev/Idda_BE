@@ -58,9 +58,11 @@ public class MissionServiceImpl implements MissionService {
 
         MissionResponse response = new MissionResponse();
 
+        response.setMissionId(mission.getId());
         response.setContent(mission.getContent());
-        response.setTag(mission.getTag());
+        response.setMissionComment(mission.getMissionComment());
         response.setLevel(mission.getLevel());
+        response.setDifficulty(mission.getDifficulty());
 
         return response;
     }
@@ -120,7 +122,7 @@ public class MissionServiceImpl implements MissionService {
         int level = memberMissionProgress.getLevel();
         Difficulty difficulty = memberMissionProgress.getDifficulty();
 
-        String prompt = missionPromptProvider.build(level, difficulty, member.getNickname());
+        String prompt = missionPromptProvider.build(level, difficulty);
 
         //AI 호출 결과로 받은 json 내용 문자열로 저장
         String json = openAiClient.chatJson(prompt);
