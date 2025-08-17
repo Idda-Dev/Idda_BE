@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class MissionGenerateResponse {
     private String content;
-    private String comment;
+    private String missionComment;
 }

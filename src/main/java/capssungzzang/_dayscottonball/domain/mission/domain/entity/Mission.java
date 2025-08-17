@@ -1,5 +1,6 @@
 package capssungzzang._dayscottonball.domain.mission.domain.entity;
 
+import capssungzzang._dayscottonball.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -27,28 +28,26 @@ public class Mission extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Band band;
+    @Column(columnDefinition = "TEXT")
+    private String missionComment;
 
     @Column(nullable = false)
     private int level;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
+
     @Column(nullable = false)
     private boolean isAchieved;
 
-    @Column
-    private String tag;
-
-    public enum Band { A, B, C, D, E }
 
     @Builder
-    public Mission(Member member, String content, Band band, int level, boolean isAchieved, String tag) {
+    public Mission(Member member, String content, String missionComment, int level, Difficulty difficulty) {
         this.member = member;
         this.content = content;
-        this.band = band;
+        this.missionComment = missionComment;
         this.level = level;
-        this.isAchieved = isAchieved;
-        this.tag = tag;
+        this.difficulty = difficulty;
     }
 }
