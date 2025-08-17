@@ -36,12 +36,12 @@ public class VerificationPostController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<Void> createVerificationPost(
-            @PathVariable Long userId,
-            @PathVariable Long missionId,
+            @PathVariable("userId") Long memberId,
+            @PathVariable("missionID") Long missionId,
             @ModelAttribute VerificationPostCreateRequest request,
             @RequestPart("file") MultipartFile file) {
         Long postId = verificationPostService.createVerificationPost(
-                userId, missionId, request, file);
+                memberId, missionId, request, file);
 
         return ResponseEntity
                 .created(URI.create("/api/missions/posts/" + postId))

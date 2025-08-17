@@ -31,11 +31,4 @@ public class LevelRequirement extends BaseEntity {
     @Column(name = "random_mode", nullable = false)
     private boolean randomMode;
 
-    public int requiredFor(Difficulty difficulty) {
-        return switch (difficulty) {
-            case EASY -> easyRequired;
-            case NORMAL -> normalRequired;
-            case HARD -> hardRequired;
-        };
-    }
 }

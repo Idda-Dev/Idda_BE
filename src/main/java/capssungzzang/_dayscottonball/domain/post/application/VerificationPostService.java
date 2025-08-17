@@ -9,7 +9,7 @@ import java.util.List;
 public interface VerificationPostService {
     List<VerificationPostResponse> getAllVerificationPosts();
     VerificationPostResponse getVerificationPost(Long postId);
-    Long createVerificationPost(Long userId, Long missionId,
+    Long createVerificationPost(Long memberId, Long missionId,
                                 VerificationPostCreateRequest request,
                                 MultipartFile file);
 }
