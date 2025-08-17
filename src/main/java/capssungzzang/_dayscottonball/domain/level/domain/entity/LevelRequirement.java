@@ -1,5 +1,6 @@
 package capssungzzang._dayscottonball.domain.level.domain.entity;
 
+import capssungzzang._dayscottonball.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang._dayscottonball.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,8 +30,6 @@ public class LevelRequirement extends BaseEntity {
 
     @Column(name = "random_mode", nullable = false)
     private boolean randomMode;
-
-    public enum Difficulty { EASY, NORMAL, HARD }
 
     public int requiredFor(Difficulty difficulty) {
         return switch (difficulty) {
