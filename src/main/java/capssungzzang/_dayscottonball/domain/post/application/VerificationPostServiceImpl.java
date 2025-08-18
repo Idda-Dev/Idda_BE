@@ -31,10 +31,10 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     private final S3StorageService s3StorageService;
 
     @Override
-    public List<VerificationPostResponse> getAllVerificationPosts() {
+    public List<VerificationPostResponse> getAllVerificationPosts(String location) {
 
         List<VerificationPostRepository.PostWithHearts> rows =
-                verificationPostRepository.findAllOrderByHeartsDesc();
+                verificationPostRepository.findAllByLocationOrderByHeartsDesc(location);
 
         return rows.stream().map(row -> {
             VerificationPost verificationPost = row.getPost();
@@ -43,6 +43,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             response.setPostId(verificationPost.getId());
             response.setMemberId(verificationPost.getMember().getId());
             response.setMissionId(verificationPost.getMission().getId());
+            response.setProfileImageUrl(verificationPost.getMember().getProfileImageUrl());
+            response.setNickname(verificationPost.getMember().getNickname());
             response.setTitle(verificationPost.getTitle());
             response.setContent(verificationPost.getContent());
             response.setPhotoUrl(verificationPost.getPhotoUrl());
@@ -57,7 +59,9 @@ public class VerificationPostServiceImpl implements VerificationPostService {
 
 
     @Override
-    public VerificationPostResponse getVerificationPost(Long postId) {
+    public VerificationPostResponse getVerificationPost(Long memberId, Long postId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
         VerificationPost verificationPost = verificationPostRepository.findById(postId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "인증글이 존재하지 않습니다."));
 
@@ -65,6 +69,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         response.setPostId(verificationPost.getId());
         response.setMemberId(verificationPost.getMember().getId());
         response.setMissionId(verificationPost.getMission().getId());
+        response.setProfileImageUrl(member.getProfileImageUrl());
+        response.setNickname(member.getNickname());
         response.setTitle(verificationPost.getTitle());
         response.setContent(verificationPost.getContent());
         response.setPhotoUrl(verificationPost.getPhotoUrl());
@@ -96,7 +102,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
                 .mission(mission)
                 .title(mission.getContent())
                 .content(request.getContent())
-                .location(request.getLocation())
+                .location(member.getLocation())
                 .photoUrl(photoUrl)
                 .build();
 

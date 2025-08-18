@@ -11,6 +11,8 @@ public class VerificationPostResponse {
     private Long postId;
     private Long memberId;
     private Long missionId;
+    private String profileImageUrl;
+    private String nickname;
     private String title;
     private String content;
     private String photoUrl;

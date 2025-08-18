@@ -20,14 +20,15 @@ public class VerificationPostController {
     private final VerificationPostService verificationPostService;
 
     @GetMapping("/missions/posts")
-    public ResponseEntity<List<VerificationPostResponse>> getAllVerificationPosts() {
-        List<VerificationPostResponse> responses = verificationPostService.getAllVerificationPosts();
+    public ResponseEntity<List<VerificationPostResponse>> getAllVerificationPosts(@RequestParam("location") String location) {
+        List<VerificationPostResponse> responses = verificationPostService.getAllVerificationPosts(location);
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/missions/posts/{postId}")
-    public ResponseEntity<VerificationPostResponse> getVerificationPost(@PathVariable("postId") Long postId) {
-        VerificationPostResponse response = verificationPostService.getVerificationPost(postId);
+    @GetMapping("/missions/users/{userId}/posts/{postId}")
+    public ResponseEntity<VerificationPostResponse> getVerificationPost(@PathVariable("userId") Long memberId,
+                                                                        @PathVariable("postId") Long postId) {
+        VerificationPostResponse response = verificationPostService.getVerificationPost(memberId, postId);
         return ResponseEntity.ok(response);
     }
 

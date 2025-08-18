@@ -9,6 +9,8 @@ public class MemberResponse {
     private Long memberId;
     private String nickname;
     private int candy;
+    private String profileImageUrl;
+    private String location;
     private int level;
     private int successCount;
     private int totalCount;
