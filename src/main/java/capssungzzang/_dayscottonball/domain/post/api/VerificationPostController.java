@@ -25,9 +25,10 @@ public class VerificationPostController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/missions/posts/{postId}")
-    public ResponseEntity<VerificationPostResponse> getVerificationPost(@PathVariable("postId") Long postId) {
-        VerificationPostResponse response = verificationPostService.getVerificationPost(postId);
+    @GetMapping("/missions/users/{userId}/posts/{postId}")
+    public ResponseEntity<VerificationPostResponse> getVerificationPost(@PathVariable("userId") Long memberId,
+                                                                        @PathVariable("postId") Long postId) {
+        VerificationPostResponse response = verificationPostService.getVerificationPost(memberId, postId);
         return ResponseEntity.ok(response);
     }
 

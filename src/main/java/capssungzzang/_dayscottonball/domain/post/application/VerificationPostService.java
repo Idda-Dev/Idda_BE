@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VerificationPostService {
     List<VerificationPostResponse> getAllVerificationPosts();
-    VerificationPostResponse getVerificationPost(Long postId);
+    VerificationPostResponse getVerificationPost(Long memberId, Long postId);
     Long createVerificationPost(Long memberId, Long missionId,
                                 VerificationPostCreateRequest request,
                                 MultipartFile file);
