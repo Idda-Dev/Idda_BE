@@ -20,8 +20,8 @@ public class VerificationPostController {
     private final VerificationPostService verificationPostService;
 
     @GetMapping("/missions/posts")
-    public ResponseEntity<List<VerificationPostResponse>> getAllVerificationPosts() {
-        List<VerificationPostResponse> responses = verificationPostService.getAllVerificationPosts();
+    public ResponseEntity<List<VerificationPostResponse>> getAllVerificationPosts(@RequestParam("location") String location) {
+        List<VerificationPostResponse> responses = verificationPostService.getAllVerificationPosts(location);
         return ResponseEntity.ok(responses);
     }
 

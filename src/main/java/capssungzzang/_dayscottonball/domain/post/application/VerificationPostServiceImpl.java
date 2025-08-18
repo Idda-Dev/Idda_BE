@@ -31,10 +31,10 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     private final S3StorageService s3StorageService;
 
     @Override
-    public List<VerificationPostResponse> getAllVerificationPosts() {
+    public List<VerificationPostResponse> getAllVerificationPosts(String location) {
 
         List<VerificationPostRepository.PostWithHearts> rows =
-                verificationPostRepository.findAllOrderByHeartsDesc();
+                verificationPostRepository.findAllByLocationOrderByHeartsDesc(location);
 
         return rows.stream().map(row -> {
             VerificationPost verificationPost = row.getPost();

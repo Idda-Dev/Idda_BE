@@ -17,13 +17,15 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
     Optional<VerificationPost> findById(@NonNull Long id);
 
     @Query("""
-        select vp as post, coalesce(count(h.id), 0) as hearts
-        from VerificationPost vp
-        left join Heart h on h.post = vp
-        group by vp
-        order by count(h.id) desc, vp.createdAt desc
-    """)
-    List<PostWithHearts> findAllOrderByHeartsDesc();
+    select vp as post, coalesce(count(h.id), 0) as hearts
+    from VerificationPost vp
+    left join Heart h on h.post = vp
+    where vp.location = :location
+    group by vp
+    order by count(h.id) desc, vp.createdAt desc
+""")
+    List<PostWithHearts> findAllByLocationOrderByHeartsDesc(String location);
+
 
     interface PostWithHearts {
         VerificationPost getPost();
