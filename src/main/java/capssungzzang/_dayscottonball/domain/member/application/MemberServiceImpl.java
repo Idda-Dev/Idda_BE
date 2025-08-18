@@ -29,6 +29,8 @@ public class MemberServiceImpl implements MemberService {
         response.setMemberId(member.getId());
         response.setNickname(member.getNickname());
         response.setCandy(member.getCandy());
+        response.setProfileImageUrl(member.getProfileImageUrl());
+        response.setLocation(member.getLocation());
         response.setLevel(memberMissionProgressRepository.findCurrentLevel(memberId));
         response.setSuccessCount(memberMissionProgressRepository.getCurrentSuccessCount(memberId));
         response.setTotalCount(memberMissionProgressRepository.getCurrentTotalCount(memberId));
