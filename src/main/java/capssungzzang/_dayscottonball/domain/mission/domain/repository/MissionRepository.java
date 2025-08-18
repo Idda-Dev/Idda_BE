@@ -28,5 +28,12 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
             @Param("end") LocalDateTime end
     );
 
-    boolean existsForDay(Long memberId, LocalDateTime start, LocalDateTime end);
+    @Query("""
+        select (count(m) > 0) from Mission m
+        where m.member.id = :memberId
+          and m.createdAt >= :start and m.createdAt < :end
+    """)
+    boolean existsForDay(@Param("memberId") Long memberId,
+                         @Param("start") LocalDateTime start,
+                         @Param("end") LocalDateTime end);
 }

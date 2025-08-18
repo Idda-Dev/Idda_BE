@@ -32,4 +32,10 @@ public class MissionController {
         MissionAchievementResponse response = missionService.getAchievementDates(userId, year, month);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/users/{userId}/missions/refresh")
+    public ResponseEntity<MissionResponse> refreshMission(@PathVariable("userId") Long memberId) {
+        MissionResponse response = missionService.refreshMission(memberId);
+        return ResponseEntity.ok(response);
+    }
 }

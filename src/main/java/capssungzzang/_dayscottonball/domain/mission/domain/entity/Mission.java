@@ -41,7 +41,6 @@ public class Mission extends BaseEntity {
     @Column(nullable = false)
     private boolean isAchieved;
 
-
     @Builder
     public Mission(Member member, String content, String missionComment, int level, Difficulty difficulty) {
         this.member = member;
@@ -49,5 +48,10 @@ public class Mission extends BaseEntity {
         this.missionComment = missionComment;
         this.level = level;
         this.difficulty = difficulty;
+    }
+
+    public void refreshMission(String content, String missionComment) {
+        this.content = content;
+        this.missionComment = missionComment;
     }
 }

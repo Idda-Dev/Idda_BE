@@ -8,7 +8,9 @@ import capssungzzang._dayscottonball.domain.member.domain.entity.MemberMissionPr
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
 import capssungzzang._dayscottonball.domain.mission.domain.entity.Mission;
+import capssungzzang._dayscottonball.domain.mission.domain.entity.SpareMission;
 import capssungzzang._dayscottonball.domain.mission.domain.repository.MissionRepository;
+import capssungzzang._dayscottonball.domain.mission.domain.repository.SpareMissionRepository;
 import capssungzzang._dayscottonball.domain.mission.dto.MissionAchievementResponse;
 import capssungzzang._dayscottonball.domain.mission.dto.MissionGenerateResponse;
 import capssungzzang._dayscottonball.domain.mission.dto.MissionResponse;
@@ -37,6 +39,7 @@ public class MissionServiceImpl implements MissionService {
     private final OpenAiClient openAiClient;
     private final ObjectMapper objectMapper;
     private final MissionPromptProvider missionPromptProvider;
+    private final SpareMissionRepository spareMissionRepository;
 
     @Override
     public MissionResponse getMission(Long memberId, LocalDate date) {
@@ -146,5 +149,39 @@ public class MissionServiceImpl implements MissionService {
 
         //미션 객체 DB 저장
         missionRepository.save(mission);
+    }
+
+    @Override
+    public MissionResponse refreshMission(Long memberId) {
+
+        if (!memberRepository.existsById(memberId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end   = today.plusDays(1).atStartOfDay();
+
+        Mission mission = missionRepository
+                .findByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(memberId, start, end)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 날짜의 미션이 없습니다."));
+
+        SpareMission spareMission = spareMissionRepository.findByLevelAndDifficulty(mission.getLevel(), mission.getDifficulty())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "스페어 미션이 존재하지 않습니다.")
+                );
+
+        mission.refreshMission(spareMission.getContent(), spareMission.getMissionComment());
+
+        MissionResponse response = new MissionResponse();
+
+        response.setMissionId(mission.getId());
+        response.setContent(mission.getContent());
+        response.setMissionComment(mission.getMissionComment());
+        response.setLevel(mission.getLevel());
+        response.setDifficulty(mission.getDifficulty());
+
+        return response;
+
     }
 }
