@@ -43,6 +43,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             response.setPostId(verificationPost.getId());
             response.setMemberId(verificationPost.getMember().getId());
             response.setMissionId(verificationPost.getMission().getId());
+            response.setProfileImageUrl(verificationPost.getMember().getProfileImageUrl());
+            response.setNickname(verificationPost.getMember().getNickname());
             response.setTitle(verificationPost.getTitle());
             response.setContent(verificationPost.getContent());
             response.setPhotoUrl(verificationPost.getPhotoUrl());
