@@ -12,6 +12,8 @@ public class CommentResponse {
     private Long memberId;
     private Long postId;
     private Long commentId;
+    private String profileImageUrl;
+    private String nickname;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

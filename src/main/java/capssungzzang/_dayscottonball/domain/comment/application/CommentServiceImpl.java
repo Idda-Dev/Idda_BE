@@ -46,25 +46,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponse> getAllComments(Long postId) {
-
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다.");
         }
 
         List<Comment> comments = commentRepository.findAllByPostIdWithMember(postId);
 
-        return comments.stream()
-                .map(comment -> {
-                    CommentResponse response = new CommentResponse();
-                    response.setMemberId(comment.getMember().getId());
-                    response.setPostId(comment.getPost().getId());
-                    response.setCommentId(comment.getId());
-                    response.setContent(comment.getContent());
-                    response.setCreatedAt(comment.getCreatedAt());
-                    response.setUpdatedAt(comment.getUpdatedAt());
-                    return response;
-                })
-                .toList();
+        return comments.stream().map(c -> {
+            CommentResponse r = new CommentResponse();
+            r.setMemberId(c.getMember().getId());
+            r.setPostId(c.getPost().getId());
+            r.setCommentId(c.getId());
+            r.setProfileImageUrl(c.getMember().getProfileImageUrl());
+            r.setNickname(c.getMember().getNickname());
+            r.setContent(c.getContent());
+            r.setCreatedAt(c.getCreatedAt());
+            r.setUpdatedAt(c.getUpdatedAt());
+            return r;
+        }).toList();
     }
 
     @Override
