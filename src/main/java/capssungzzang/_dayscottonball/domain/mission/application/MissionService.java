@@ -8,4 +8,6 @@ import java.time.LocalDate;
 public interface MissionService {
     MissionResponse getMission(Long memberId, LocalDate date);
     MissionAchievementResponse getAchievementDates(Long userId, int year, int month);
+    void generateMission();
+    MissionResponse refreshMission(Long memberId);
 }
