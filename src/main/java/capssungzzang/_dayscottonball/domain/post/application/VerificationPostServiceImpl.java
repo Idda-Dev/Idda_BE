@@ -107,6 +107,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
                 .title(mission.getContent())
                 .content(request.getContent())
                 .location(member.getLocation())
+                .isPublic(request.isPublic())
                 .photoUrl(photoUrl)
                 .build();
 

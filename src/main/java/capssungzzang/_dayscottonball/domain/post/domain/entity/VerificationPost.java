@@ -26,12 +26,16 @@ public class VerificationPost extends Post {
     @Column
     private String location;
 
+    @Column
+    private boolean isPublic;
+
     @Builder(builderMethodName = "verificationBuilder")
     public VerificationPost(Member member, String title, String content,
-                            String photoUrl, String location, Mission mission) {
+                            String photoUrl, String location, boolean isPublic, Mission mission) {
         super(member, title, content);
         this.photoUrl = photoUrl;
         this.location = location;
+        this.isPublic = isPublic;
         this.mission = mission;
     }
 }

@@ -8,4 +8,5 @@ import lombok.Setter;
 public class VerificationPostCreateRequest {
     private String title;
     private String content;
+    private boolean isPublic;
 }
