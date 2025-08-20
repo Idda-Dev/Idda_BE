@@ -36,7 +36,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     public List<VerificationPostResponse> getAllVerificationPosts(String location) {
 
         List<VerificationPostRepository.PostWithStats> rows =
-                verificationPostRepository.findAllByLocationOrderByHeartsDesc(location);
+                verificationPostRepository.findAllByLocationAndIsPublicTrueOrderByHeartsDesc(location);
 
         return rows.stream().map(row -> {
             VerificationPost verificationPost = row.getPost();
@@ -107,6 +107,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
                 .title(mission.getContent())
                 .content(request.getContent())
                 .location(member.getLocation())
+                .isPublic(request.isPublic())
                 .photoUrl(photoUrl)
                 .build();
 

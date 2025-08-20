@@ -38,7 +38,7 @@ public class VerificationPostController {
     )
     public ResponseEntity<Void> createVerificationPost(
             @PathVariable("userId") Long memberId,
-            @PathVariable("missionID") Long missionId,
+            @PathVariable("missionId") Long missionId,
             @ModelAttribute VerificationPostCreateRequest request,
             @RequestPart("file") MultipartFile file) {
         Long postId = verificationPostService.createVerificationPost(

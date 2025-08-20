@@ -17,22 +17,24 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
     Optional<VerificationPost> findById(@NonNull Long id);
 
     @Query("""
-        select vp as post,
-               coalesce(count(distinct h.id), 0) as hearts,
-               coalesce(count(distinct c.id), 0) as comments
-        from VerificationPost vp
-        left join Heart h on h.post = vp
-        left join Comment c on c.post = vp
-        where vp.location = :location
-        group by vp
-        order by count(distinct h.id) desc, vp.createdAt desc
-    """)
-    List<PostWithStats> findAllByLocationOrderByHeartsDesc(String location);
+    select vp as post,
+           coalesce(count(distinct h.id), 0) as hearts,
+           coalesce(count(distinct c.id), 0) as comments
+    from VerificationPost vp
+    left join Heart h on h.post = vp
+    left join Comment c on c.post = vp
+    where vp.location = :location
+      and vp.isPublic = true
+    group by vp
+    order by count(distinct h.id) desc, vp.createdAt desc
+""")
+    List<PostWithStats> findAllByLocationAndIsPublicTrueOrderByHeartsDesc(String location);
+
 
     interface PostWithStats {
         VerificationPost getPost();
         long getHearts();
-        long getComments();  // ← 댓글 수 추가
+        long getComments();
     }
 }
 
