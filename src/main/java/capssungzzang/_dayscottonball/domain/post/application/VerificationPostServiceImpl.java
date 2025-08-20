@@ -49,7 +49,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             response.setContent(verificationPost.getContent());
             response.setPhotoUrl(verificationPost.getPhotoUrl());
             response.setLocation(verificationPost.getLocation());
-            response.setHearts(row.getHearts());
+            response.setHeartCount(row.getHearts());
             response.setCreatedAt(verificationPost.getCreatedAt());
             response.setUpdatedAt(verificationPost.getUpdatedAt());
             return response;
@@ -75,7 +75,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         response.setContent(verificationPost.getContent());
         response.setPhotoUrl(verificationPost.getPhotoUrl());
         response.setLocation(verificationPost.getLocation());
-        response.setHearts(heartRepository.countByPostId(postId));
+        response.setHeartCount(heartRepository.countByPostId(postId));
         response.setCreatedAt(verificationPost.getCreatedAt());
         response.setUpdatedAt(verificationPost.getUpdatedAt());
         return response;
