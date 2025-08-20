@@ -1,0 +1,47 @@
+package capssungzzang.idda.domain.coupon.api;
+
+import capssungzzang.idda.domain.coupon.application.CouponService;
+import capssungzzang.idda.domain.coupon.dto.CouponQRResponse;
+import capssungzzang.idda.domain.coupon.dto.CouponResponse;
+import capssungzzang.idda.domain.coupon.dto.MemberCouponResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class CouponController {
+
+    private final CouponService couponService;
+
+    @PostMapping("/users/{userId}/coupons/{couponId}")
+    public ResponseEntity<Void> purchaseCoupon(@PathVariable("userId") Long memberId, @PathVariable("couponId") Long couponId) {
+        Long myCouponId = couponService.purchase(memberId, couponId);
+        URI location = URI.create("/api/users/" + memberId + "/my-coupons/" + myCouponId);
+        return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/coupons")
+    public ResponseEntity<List<CouponResponse>> getAllCoupons() {
+        List<CouponResponse> responses =  couponService.getAllCoupons();
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/users/{userId}/coupons")
+    public ResponseEntity<List<MemberCouponResponse>> getAllMemberCoupons(@PathVariable("userId") Long memberId) {
+        List<MemberCouponResponse> responses =  couponService.getAllMemberCoupons(memberId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/users/{userId}/my-coupons/{memberCouponId}/qr")
+    public ResponseEntity<CouponQRResponse> getQrUrl(@PathVariable("userId") Long memberId,
+                                                     @PathVariable Long memberCouponId) {
+        CouponQRResponse response = couponService.generateAndUploadQrUrl(memberId, memberCouponId, true);
+        return ResponseEntity.ok(response);
+    }
+
+}
