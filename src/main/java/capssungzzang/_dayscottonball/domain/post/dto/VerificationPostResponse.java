@@ -17,7 +17,8 @@ public class VerificationPostResponse {
     private String content;
     private String photoUrl;
     private String location;
-    private long hearts;
+    private long heartCount;
+    private long commentCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,5 +1,6 @@
 package capssungzzang._dayscottonball.domain.post.application;
 
+import capssungzzang._dayscottonball.domain.comment.domain.repository.CommentRepository;
 import capssungzzang._dayscottonball.domain.heart.domain.repository.HeartRepository;
 import capssungzzang._dayscottonball.domain.member.domain.entity.Member;
 import capssungzzang._dayscottonball.domain.member.domain.repository.MemberRepository;
@@ -29,11 +30,12 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final S3StorageService s3StorageService;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<VerificationPostResponse> getAllVerificationPosts(String location) {
 
-        List<VerificationPostRepository.PostWithHearts> rows =
+        List<VerificationPostRepository.PostWithStats> rows =
                 verificationPostRepository.findAllByLocationOrderByHeartsDesc(location);
 
         return rows.stream().map(row -> {
@@ -49,7 +51,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             response.setContent(verificationPost.getContent());
             response.setPhotoUrl(verificationPost.getPhotoUrl());
             response.setLocation(verificationPost.getLocation());
-            response.setHearts(row.getHearts());
+            response.setHeartCount(row.getHearts());
+            response.setCommentCount(row.getComments());
             response.setCreatedAt(verificationPost.getCreatedAt());
             response.setUpdatedAt(verificationPost.getUpdatedAt());
             return response;
@@ -75,7 +78,8 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         response.setContent(verificationPost.getContent());
         response.setPhotoUrl(verificationPost.getPhotoUrl());
         response.setLocation(verificationPost.getLocation());
-        response.setHearts(heartRepository.countByPostId(postId));
+        response.setHeartCount(heartRepository.countByPostId(postId));
+        response.setCommentCount(commentRepository.countByPostId(postId));
         response.setCreatedAt(verificationPost.getCreatedAt());
         response.setUpdatedAt(verificationPost.getUpdatedAt());
         return response;
