@@ -32,7 +32,7 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
     interface PostWithStats {
         VerificationPost getPost();
         long getHearts();
-        long getComments();  // ← 댓글 수 추가
+        long getComments();
     }
 }
 
