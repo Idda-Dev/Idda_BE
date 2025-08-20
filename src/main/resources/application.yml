@@ -44,3 +44,7 @@ app:
   s3:
     bucket: capssungzzang-bucket
     public-read: true
+
+server:
+  error:
+    include-message: always
