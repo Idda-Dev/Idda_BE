@@ -38,8 +38,8 @@ class MissionSchedulerTest {
     void 미션생성테스트() throws Exception {
         int level = 1;
         Difficulty difficulty = Difficulty.EASY;
-
-        String prompt = missionPromptProvider.build(level, difficulty);
+        String location = "동작구";
+        String prompt = missionPromptProvider.build(level, difficulty, location);
         String json = openAiClient.chatJson(prompt);
         MissionGenerateResponse r = objectMapper.readValue(json, MissionGenerateResponse.class);
 

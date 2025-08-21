@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 public class MissionPromptProvider {
 
-    public String build(int level, Difficulty difficulty) {
+    public String build(int level, Difficulty difficulty, String location) {
         int effectiveLevel = level;
         Difficulty effectiveDifficulty = difficulty;
 
@@ -27,11 +27,12 @@ public class MissionPromptProvider {
                         + MissionPromptCatalog.COMMON_RULES;
 
         // 플레이스홀더 치환
-        return substitute(prompt, effectiveLevel, effectiveDifficulty);
+        return substitute(prompt, effectiveLevel, effectiveDifficulty, location);
     }
 
-    private String substitute(String prompt, int level, Difficulty difficulty) {
+    private String substitute(String prompt, int level, Difficulty difficulty, String location) {
         return prompt.replace("{level}", String.valueOf(level))
-                .replace("{difficulty}", difficulty == null ? "" : difficulty.name().toLowerCase(Locale.ROOT));
+                .replace("{difficulty}", difficulty == null ? "" : difficulty.name().toLowerCase(Locale.ROOT))
+                .replace("{location}", location == null ? "" : location);
     }
 }
