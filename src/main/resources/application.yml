@@ -1,6 +1,6 @@
 spring:
   application:
-    name: 90dayscottonball
+    name: idda
 
   datasource:
     username: ${DB_USERNAME}
