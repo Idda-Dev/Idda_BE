@@ -44,6 +44,8 @@ app:
   s3:
     bucket: capssungzzang-bucket
     public-read: true
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 server:
   error:
