@@ -50,3 +50,4 @@ app:
 server:
   error:
     include-message: always
+  forward-headers-strategy: native
