@@ -8,6 +8,7 @@ import lombok.Setter;
 public class CouponResponse {
     private Long couponId;
     private String storeName;
+    private String storeImageUrl;
     private String title;
     private int price;
     private Integer maxCount;
