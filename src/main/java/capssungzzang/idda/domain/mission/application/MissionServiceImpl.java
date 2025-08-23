@@ -13,6 +13,7 @@ import capssungzzang.idda.domain.mission.dto.MissionAchievementResponse;
 import capssungzzang.idda.domain.mission.dto.MissionGenerateResponse;
 import capssungzzang.idda.domain.mission.dto.MissionResponse;
 import capssungzzang.idda.domain.mission.prompt.MissionPromptProvider;
+import capssungzzang.idda.domain.post.domain.repository.VerificationPostRepository;
 import capssungzzang.idda.global.openai.client.OpenAiClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class MissionServiceImpl implements MissionService {
     private final ObjectMapper objectMapper;
     private final MissionPromptProvider missionPromptProvider;
     private final SpareMissionRepository spareMissionRepository;
+    private final VerificationPostRepository verificationPostRepository;
 
     @Override
     public MissionResponse getMission(Long memberId, LocalDate date) {
@@ -63,6 +65,8 @@ public class MissionServiceImpl implements MissionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 날짜의 미션이 없습니다."));
 
 
+        boolean isVerified = verificationPostRepository.existsByMissionId(mission.getId());
+
         MissionResponse response = new MissionResponse();
 
         response.setMissionId(mission.getId());
@@ -70,7 +74,7 @@ public class MissionServiceImpl implements MissionService {
         response.setMissionComment(mission.getMissionComment());
         response.setLevel(mission.getLevel());
         response.setDifficulty(mission.getDifficulty());
-
+        response.setVerified(isVerified);
         return response;
     }
 

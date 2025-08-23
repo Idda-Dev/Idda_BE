@@ -36,5 +36,7 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
         long getHearts();
         long getComments();
     }
+
+    boolean existsByMissionId(Long missionId);
 }
 
