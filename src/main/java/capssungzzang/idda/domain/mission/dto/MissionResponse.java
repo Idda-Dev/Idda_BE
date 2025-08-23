@@ -12,4 +12,5 @@ public class MissionResponse {
     private String missionComment;
     private int level;
     private Difficulty difficulty;
+    private boolean isVerified;
 }
