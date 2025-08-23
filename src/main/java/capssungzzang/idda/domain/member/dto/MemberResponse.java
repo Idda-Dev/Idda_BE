@@ -3,6 +3,8 @@ package capssungzzang.idda.domain.member.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class MemberResponse {
@@ -14,4 +16,5 @@ public class MemberResponse {
     private int level;
     private int successCount;
     private int totalCount;
+    private LocalDateTime createdAt;
 }
