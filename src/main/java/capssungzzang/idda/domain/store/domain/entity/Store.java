@@ -19,8 +19,12 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(length = 2048)
+    private String storeImageUrl;
+
     @Builder
-    public Store(String name) {
+    public Store(String name,  String storeImageUrl) {
         this.name = name;
+        this.storeImageUrl = storeImageUrl;
     }
 }
