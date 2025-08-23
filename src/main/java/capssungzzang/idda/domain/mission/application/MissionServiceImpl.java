@@ -83,16 +83,23 @@ public class MissionServiceImpl implements MissionService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "month는 1~12 범위여야 합니다.");
         }
 
+        ZoneId KST = ZoneId.of("Asia/Seoul");
+
         LocalDate firstDay = LocalDate.of(year, month, 1);
-        LocalDateTime start = firstDay.atStartOfDay();
-        LocalDateTime end = firstDay.plusMonths(1).atStartOfDay();
+        LocalDateTime startUtc = firstDay.atStartOfDay(KST)
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
+        LocalDateTime endUtc = firstDay.plusMonths(1).atStartOfDay(KST)
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
 
-        List<LocalDateTime> createdAts = missionRepository.findAchievedCreatedAtsByMemberAndMonth(userId, start, end);
+        List<LocalDateTime> createdAts = missionRepository.findAchievedCreatedAtsByMemberAndMonth(userId, startUtc, endUtc);
 
-        final DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
-
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
         List<String> dates = createdAts.stream()
-                .map(LocalDateTime::toLocalDate)
+                .map(tsUtc -> tsUtc.atZone(ZoneOffset.UTC)
+                        .withZoneSameInstant(KST)
+                        .toLocalDate())
                 .distinct()
                 .sorted()
                 .map(fmt::format)
