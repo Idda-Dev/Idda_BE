@@ -80,6 +80,7 @@ public class CouponServiceImpl implements CouponService {
                     CouponResponse response = new CouponResponse();
                     response.setCouponId(coupon.getId());
                     response.setStoreName(coupon.getStore().getName());
+                    response.setStoreImageUrl(coupon.getStore().getStoreImageUrl());
                     response.setTitle(coupon.getTitle());
                     response.setPrice(coupon.getPrice());
                     response.setMaxCount(coupon.getMaxCount());
