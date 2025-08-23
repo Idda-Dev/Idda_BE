@@ -23,6 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -50,12 +52,16 @@ public class MissionServiceImpl implements MissionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
         }
 
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end   = date.plusDays(1).atStartOfDay();
+        ZoneId KST = ZoneId.of("Asia/Seoul");
+        LocalDateTime startUtc = date.atStartOfDay(KST)
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
+        LocalDateTime endUtc = startUtc.plusDays(1);
 
         Mission mission = missionRepository
-                .findByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(memberId, start, end)
+                .findByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(memberId, startUtc, endUtc)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 날짜의 미션이 없습니다."));
+
 
         MissionResponse response = new MissionResponse();
 
@@ -105,11 +111,14 @@ public class MissionServiceImpl implements MissionService {
     @Override
     public void generateMission() {
 
-        LocalDateTime start = LocalDate.now().atStartOfDay();
-        LocalDateTime end = start.plusDays(1);
+        ZoneId KST = ZoneId.of("Asia/Seoul");
 
-        //당일 미션 존재 여부 검증
-        if (missionRepository.existsForDay(1L, start, end)) return;
+        LocalDateTime startUtc = LocalDate.now(KST)
+                .atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
+        LocalDateTime endUtc = startUtc.plusDays(1);
+
+        if (missionRepository.existsForDay(1L, startUtc, endUtc)) return;
 
         //미션 생성은 테스트 계정(memberId=1)만
         Member member = memberRepository.findById(1L).get();
