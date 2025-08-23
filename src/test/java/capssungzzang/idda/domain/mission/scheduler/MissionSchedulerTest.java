@@ -36,7 +36,7 @@ class MissionSchedulerTest {
 
     @Test
     void 미션생성테스트() throws Exception {
-        int level = 1;
+        int level = 4;
         Difficulty difficulty = Difficulty.EASY;
         String location = "동작구";
         String prompt = missionPromptProvider.build(level, difficulty, location);

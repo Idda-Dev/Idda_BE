@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
         response.setLevel(memberMissionProgressRepository.findCurrentLevel(memberId));
         response.setSuccessCount(memberMissionProgressRepository.getCurrentSuccessCount(memberId));
         response.setTotalCount(memberMissionProgressRepository.getCurrentTotalCount(memberId));
+        response.setCreatedAt(member.getCreatedAt());
 
         return response;
     }
