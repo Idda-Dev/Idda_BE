@@ -9,6 +9,7 @@ import capssungzzang.idda.domain.mission.domain.repository.MissionRepository;
 import capssungzzang.idda.domain.post.domain.entity.VerificationPost;
 import capssungzzang.idda.domain.post.domain.repository.VerificationPostRepository;
 import capssungzzang.idda.domain.post.dto.VerificationPostCreateRequest;
+import capssungzzang.idda.domain.post.dto.VerificationPostDailyResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostResponse;
 import capssungzzang.idda.global.s3.service.S3StorageService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class VerificationPostServiceImpl implements VerificationPostService {
+
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
 
     private final VerificationPostRepository verificationPostRepository;
     private final HeartRepository heartRepository;
@@ -114,5 +122,26 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         verificationPostRepository.save(verificationPost);
 
         return verificationPost.getId();
+    }
+
+    public VerificationPostDailyResponse getDailyVerificationPost(Long memberId, LocalDate kstDate) {
+
+        if (kstDate == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "date는 필수입니다.");
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        LocalDateTime startUtc = kstDate.atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        LocalDateTime endUtc   = startUtc.plusDays(1);
+
+        VerificationPost verificationPost = verificationPostRepository.findFirstByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThanOrderByCreatedAtAsc(memberId, startUtc, endUtc)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 날짜의 인증글이 없습니다."));
+
+        VerificationPostDailyResponse response = new VerificationPostDailyResponse();
+        response.setPostId(verificationPost.getId());
+        response.setTitle(verificationPost.getTitle());
+        response.setContent(verificationPost.getContent());
+        response.setPhotoUrl(verificationPost.getPhotoUrl());
+        return response;
     }
 }

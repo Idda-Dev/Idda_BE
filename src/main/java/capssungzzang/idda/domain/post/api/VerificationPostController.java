@@ -2,6 +2,7 @@ package capssungzzang.idda.domain.post.api;
 
 import capssungzzang.idda.domain.post.application.VerificationPostService;
 import capssungzzang.idda.domain.post.dto.VerificationPostCreateRequest;
+import capssungzzang.idda.domain.post.dto.VerificationPostDailyResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -47,5 +49,12 @@ public class VerificationPostController {
         return ResponseEntity
                 .created(URI.create("/api/missions/posts/" + postId))
                 .build();
+    }
+
+    @GetMapping("/users/{userId}/missions/posts")
+    public ResponseEntity<VerificationPostDailyResponse> getDailyVerificationPost(@PathVariable("userId") Long memberId,
+                                                                                  @RequestParam("date") LocalDate date) {
+        VerificationPostDailyResponse response = verificationPostService.getDailyVerificationPost(memberId, date);
+        return ResponseEntity.ok(response);
     }
 }
