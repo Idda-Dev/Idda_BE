@@ -11,6 +11,7 @@ public class MemberCouponResponse {
     private Long memberCouponId;
     private Long couponId;
     private String storeName;
+    private String storeImageUrl;
     private String title;
     private String status;
     private LocalDateTime expiresAt;
