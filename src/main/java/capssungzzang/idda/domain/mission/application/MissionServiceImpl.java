@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -33,6 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class MissionServiceImpl implements MissionService {
+
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
 
     private final MissionRepository missionRepository;
     private final MemberRepository memberRepository;
@@ -54,7 +53,6 @@ public class MissionServiceImpl implements MissionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
         }
 
-        ZoneId KST = ZoneId.of("Asia/Seoul");
         LocalDateTime startUtc = date.atStartOfDay(KST)
                 .withZoneSameInstant(ZoneOffset.UTC)
                 .toLocalDateTime();
@@ -86,8 +84,6 @@ public class MissionServiceImpl implements MissionService {
         if (month < 1 || month > 12) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "month는 1~12 범위여야 합니다.");
         }
-
-        ZoneId KST = ZoneId.of("Asia/Seoul");
 
         LocalDate firstDay = LocalDate.of(year, month, 1);
         LocalDateTime startUtc = firstDay.atStartOfDay(KST)
@@ -121,8 +117,6 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public void generateMission() {
-
-        ZoneId KST = ZoneId.of("Asia/Seoul");
 
         LocalDateTime startUtc = LocalDate.now(KST)
                 .atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC)
@@ -176,12 +170,16 @@ public class MissionServiceImpl implements MissionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
         }
 
-        LocalDate today = LocalDate.now();
-        LocalDateTime start = today.atStartOfDay();
-        LocalDateTime end   = today.plusDays(1).atStartOfDay();
+        LocalDate todayKst = LocalDate.now(KST);
+        ZonedDateTime kstStart = todayKst.atStartOfDay(KST);
+        ZonedDateTime kstEnd   = kstStart.plusDays(1);
+
+        LocalDateTime startUtc = kstStart.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        LocalDateTime endUtc   = kstEnd.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+
 
         Mission mission = missionRepository
-                .findByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(memberId, start, end)
+                .findByMemberIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(memberId, startUtc, endUtc)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 날짜의 미션이 없습니다."));
 
         SpareMission spareMission = spareMissionRepository.findByLevelAndDifficulty(mission.getLevel(), mission.getDifficulty())
