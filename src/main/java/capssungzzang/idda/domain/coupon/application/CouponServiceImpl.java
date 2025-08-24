@@ -99,6 +99,7 @@ public class CouponServiceImpl implements CouponService {
                     response.setMemberCouponId(memberCoupon.getId());
                     response.setCouponId(memberCoupon.getCoupon().getId());
                     response.setStoreName(memberCoupon.getCoupon().getStore().getName());
+                    response.setStoreImageUrl(memberCoupon.getCoupon().getStore().getStoreImageUrl());
                     response.setTitle(memberCoupon.getCoupon().getTitle());
                     response.setStatus(memberCoupon.getStatus().name());
                     response.setExpiresAt(memberCoupon.getExpiresAt());
