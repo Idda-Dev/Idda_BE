@@ -1,4 +1,4 @@
-package capssungzzang._dayscottonball;
+package capssungzzang.idda;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
