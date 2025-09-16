@@ -12,5 +12,5 @@ public class MissionScheduler {
     private final MissionService missionService;
 
     @Scheduled(cron="0 0 0 * * *", zone="Asia/Seoul")
-    public void runDaily() { missionService.generateMission(); }
+    public void runDaily() { missionService.generateMission(1L); }
 }

@@ -116,21 +116,20 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public void generateMission() {
+    public void generateMission(Long memberId) {
 
         LocalDateTime startUtc = LocalDate.now(KST)
                 .atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC)
                 .toLocalDateTime();
         LocalDateTime endUtc = startUtc.plusDays(1);
 
-        if (missionRepository.existsForDay(1L, startUtc, endUtc)) return;
+        if (missionRepository.existsForDay(memberId, startUtc, endUtc)) return;
 
-        //미션 생성은 테스트 계정(memberId=1)만
-        Member member = memberRepository.findById(1L).get();
+        Member member = memberRepository.findById(memberId).get();
 
         //미션 진행 정보 조회
         MemberMissionProgress memberMissionProgress = memberMissionProgressRepository
-                .findFirstByMemberIdAndCompletedFalseOrderByLevelDesc(1L).orElseThrow(
+                .findFirstByMemberIdAndCompletedFalseOrderByLevelDesc(memberId).orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "미션 진행 정보가 존재하지 않습니다."));
 
         //미션 정보 생성을 위한 레벨, 난이도
