@@ -6,6 +6,8 @@ import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.member.dto.MemberRegisterRequest;
 import capssungzzang.idda.domain.member.dto.MemberRegisterResponse;
 import capssungzzang.idda.domain.member.dto.MemberResponse;
+import capssungzzang.idda.domain.survey.domain.entity.Survey;
+import capssungzzang.idda.domain.survey.domain.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberMissionProgressRepository memberMissionProgressRepository;
     private final MemberRepository memberRepository;
+    private final SurveyRepository surveyRepository;
 
     @Override
     public MemberResponse getMember(Long memberId) {
@@ -61,6 +64,12 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         memberRepository.save(newMember);
+
+        Survey survey = Survey.builder()
+                .member(newMember)
+                .build();
+
+        surveyRepository.save(survey);
 
         MemberRegisterResponse response = new MemberRegisterResponse();
         response.setMemberId(newMember.getId());
