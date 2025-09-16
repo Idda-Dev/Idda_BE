@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query(value = """
@@ -15,4 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
           AND candy >= :price
         """, nativeQuery = true)
     int tryDeductCandy(@Param("memberId") Long memberId, @Param("price") int price);
+
+    boolean existsByNickname(String nickname);
+    Optional<Member> findByNickname(String nickname);
 }
