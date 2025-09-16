@@ -47,8 +47,8 @@ public class Survey extends BaseEntity {
         this.member = member;
     }
 
-    public void updateQuestion(int index, Integer answer) {
-        switch (index) {
+    public void updateQuestion(int questionNumber, Integer answer) {
+        switch (questionNumber) {
             case 1 -> this.question1 = answer;
             case 2 -> this.question2 = answer;
             case 3 -> this.question3 = answer;
