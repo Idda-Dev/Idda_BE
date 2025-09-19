@@ -1,10 +1,15 @@
 package capssungzzang.idda.domain.survey.application;
 
+import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang.idda.domain.member.domain.entity.Member;
+import capssungzzang.idda.domain.member.domain.entity.MemberMissionProgress;
+import capssungzzang.idda.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.survey.domain.entity.Survey;
 import capssungzzang.idda.domain.survey.domain.repository.SurveyRepository;
 import capssungzzang.idda.domain.survey.dto.SurveyResponse;
+import capssungzzang.idda.domain.survey.dto.SurveySubmitRequest;
+import capssungzzang.idda.domain.survey.dto.SurveySubmitResponse;
 import capssungzzang.idda.domain.survey.dto.SurveyUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     private final SurveyRepository surveyRepository;
     private final MemberRepository memberRepository;
+    private final MemberMissionProgressRepository memberMissionProgressRepository;
 
     @Override
     public void updateSurvey(SurveyUpdateRequest request, int questionNumber, Long memberId) {
@@ -56,6 +62,58 @@ public class SurveyServiceImpl implements SurveyService {
             case 5 -> response.setAnswer(survey.getQuestion5());
             case 6 -> response.setAnswer(survey.getQuestion6());
         }
+
+        return response;
+    }
+
+    @Override
+    public SurveySubmitResponse submitSurvey(SurveySubmitRequest request, Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        Survey survey = surveyRepository.findByMemberId(member.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "설문이 존재하지 않습니다."));
+
+        survey.updateQuestion(6, request.getAnswer());
+
+        int question1 = survey.getQuestion1();
+        int count = survey.getQuestion2()
+                + survey.getQuestion3()
+                + survey.getQuestion4()
+                + survey.getQuestion5()
+                + survey.getQuestion6();
+
+        int level;
+
+        switch (question1) {
+            case 1 -> {
+                level = 1;
+            }
+            case 2 -> {
+                level = (count <= 10) ? 1 : 2;
+            }
+            case 3 -> {
+                level = (count <= 10) ? 2 : 3;
+            }
+            case 4, 5, 6, 7, 8 -> {
+                level = (count <= 10) ? 3 : 4;
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Answer Index를 초과했습니다.");
+        }
+
+        MemberMissionProgress memberMissionProgress = MemberMissionProgress.builder()
+                .member(member)
+                .level(level)
+                .difficulty(Difficulty.EASY)
+                .successCount(0)
+                .completed(false)
+                .build();
+        memberMissionProgressRepository.save(memberMissionProgress);
+
+        SurveySubmitResponse response = new SurveySubmitResponse();
+        response.setNickname(member.getNickname());
+        response.setLevel(memberMissionProgress.getLevel());
 
         return response;
     }
