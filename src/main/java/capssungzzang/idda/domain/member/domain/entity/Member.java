@@ -36,4 +36,7 @@ public class Member extends BaseEntity {
         this.location = location;
     }
 
+    public void addCandy(int amount) {
+        this.candy += amount;
+    }
 }

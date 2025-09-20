@@ -2,6 +2,7 @@ package capssungzzang.idda.domain.post.api;
 
 import capssungzzang.idda.domain.post.application.VerificationPostService;
 import capssungzzang.idda.domain.post.dto.VerificationPostCreateRequest;
+import capssungzzang.idda.domain.post.dto.VerificationPostCreateResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostDailyResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,17 +39,16 @@ public class VerificationPostController {
             value = "/users/{userId}/missions/{missionId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<Void> createVerificationPost(
+    public ResponseEntity<VerificationPostCreateResponse> createVerificationPost(
             @PathVariable("userId") Long memberId,
             @PathVariable("missionId") Long missionId,
             @ModelAttribute VerificationPostCreateRequest request,
             @RequestPart("file") MultipartFile file) {
-        Long postId = verificationPostService.createVerificationPost(
+        VerificationPostCreateResponse response = verificationPostService.createVerificationPost(
                 memberId, missionId, request, file);
-
-        return ResponseEntity
-                .created(URI.create("/api/missions/posts/" + postId))
-                .build();
+        URI location = URI.create(
+                "/api/users/missions/posts/" + response.getPostId());
+        return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping("/users/{userId}/missions/posts")

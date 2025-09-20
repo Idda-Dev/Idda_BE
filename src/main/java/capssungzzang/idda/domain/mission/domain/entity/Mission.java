@@ -54,4 +54,8 @@ public class Mission extends BaseEntity {
         this.content = content;
         this.missionComment = missionComment;
     }
+
+    public void achieveMission() {
+        this.isAchieved = true;
+    }
 }
