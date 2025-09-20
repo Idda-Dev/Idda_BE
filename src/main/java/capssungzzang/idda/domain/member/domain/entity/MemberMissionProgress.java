@@ -36,6 +36,10 @@ public class MemberMissionProgress extends BaseEntity {
     @Column(nullable = false)
     private boolean completed;
 
+    public void completeLevel() {
+        this.completed = true;
+    }
+
     @Builder
     private MemberMissionProgress(Member member, int level, Difficulty difficulty, int successCount, boolean completed) {
         this.member = member;

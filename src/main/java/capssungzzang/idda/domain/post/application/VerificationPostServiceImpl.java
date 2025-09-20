@@ -2,13 +2,18 @@ package capssungzzang.idda.domain.post.application;
 
 import capssungzzang.idda.domain.comment.domain.repository.CommentRepository;
 import capssungzzang.idda.domain.heart.domain.repository.HeartRepository;
+import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
+import capssungzzang.idda.domain.member.application.MemberService;
 import capssungzzang.idda.domain.member.domain.entity.Member;
+import capssungzzang.idda.domain.member.domain.entity.MemberMissionProgress;
+import capssungzzang.idda.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.mission.domain.entity.Mission;
 import capssungzzang.idda.domain.mission.domain.repository.MissionRepository;
 import capssungzzang.idda.domain.post.domain.entity.VerificationPost;
 import capssungzzang.idda.domain.post.domain.repository.VerificationPostRepository;
 import capssungzzang.idda.domain.post.dto.VerificationPostCreateRequest;
+import capssungzzang.idda.domain.post.dto.VerificationPostCreateResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostDailyResponse;
 import capssungzzang.idda.domain.post.dto.VerificationPostResponse;
 import capssungzzang.idda.global.s3.service.S3StorageService;
@@ -39,6 +44,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     private final MissionRepository missionRepository;
     private final S3StorageService s3StorageService;
     private final CommentRepository commentRepository;
+    private final MemberMissionProgressRepository memberMissionProgressRepository;
 
     @Override
     public List<VerificationPostResponse> getAllVerificationPosts(String location) {
@@ -94,7 +100,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     }
 
     @Override
-    public Long createVerificationPost(Long memberId, Long missionId,
+    public VerificationPostCreateResponse createVerificationPost(Long memberId, Long missionId,
                                            VerificationPostCreateRequest request,
                                            MultipartFile file) {
         if (file == null || file.isEmpty()) {
@@ -105,6 +111,10 @@ public class VerificationPostServiceImpl implements VerificationPostService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "미션이 존재하지 않습니다."));
+
+        if(verificationPostRepository.existsByMissionId(missionId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 인증된 미션입니다.");
+        }
 
         String photoUrl = s3StorageService.uploadImage(
                 file, String.format("verification/missions/%d/users/%d", missionId, memberId));
@@ -121,7 +131,36 @@ public class VerificationPostServiceImpl implements VerificationPostService {
 
         verificationPostRepository.save(verificationPost);
 
-        return verificationPost.getId();
+        VerificationPostCreateResponse response = new VerificationPostCreateResponse();
+        response.setPostId(verificationPost.getId());
+
+        //어흥콘 시연용 자동 승인
+        mission.achieveMission();
+        member.addCandy(15);
+
+        MemberMissionProgress currentProgress = memberMissionProgressRepository.findFirstByMemberIdAndCompletedFalseOrderByLevelDesc(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 정보를 찾을 수 없습니다."));
+        //최대 레벨
+        if(currentProgress.getLevel() == 5) {
+            response.setLevel(5);
+            return response;
+        }
+
+        currentProgress.completeLevel();
+
+        MemberMissionProgress newProgress = MemberMissionProgress.builder()
+                .member(member)
+                .level(currentProgress.getLevel()+1)
+                .difficulty(Difficulty.EASY)
+                .successCount(0)
+                .completed(false)
+                .build();
+
+        memberMissionProgressRepository.save(newProgress);
+
+        response.setLevel(newProgress.getLevel());
+
+        return response;
     }
 
     public VerificationPostDailyResponse getDailyVerificationPost(Long memberId, LocalDate kstDate) {
