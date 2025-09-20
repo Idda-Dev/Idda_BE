@@ -38,4 +38,10 @@ public class MissionController {
         MissionResponse response = missionService.refreshMission(memberId);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("users/{userId}/missions")
+    public ResponseEntity<Void> generateMission(@PathVariable("userId") Long memberId){
+        missionService.generateMission(memberId);
+        return ResponseEntity.noContent().build();
+    }
 }
