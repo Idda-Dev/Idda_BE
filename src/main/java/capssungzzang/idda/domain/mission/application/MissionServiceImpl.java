@@ -18,6 +18,7 @@ import capssungzzang.idda.global.openai.client.OpenAiClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -116,6 +117,7 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
+    @Async
     public void generateMission(Long memberId) {
 
         LocalDateTime startUtc = LocalDate.now(KST)
@@ -125,7 +127,8 @@ public class MissionServiceImpl implements MissionService {
 
         if (missionRepository.existsForDay(memberId, startUtc, endUtc)) return;
 
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
 
         //미션 진행 정보 조회
         MemberMissionProgress memberMissionProgress = memberMissionProgressRepository
