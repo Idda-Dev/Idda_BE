@@ -14,7 +14,5 @@ public class MemberResponse {
     private String profileImageUrl;
     private String location;
     private int level;
-    private int successCount;
-    private int totalCount;
     private LocalDateTime createdAt;
 }

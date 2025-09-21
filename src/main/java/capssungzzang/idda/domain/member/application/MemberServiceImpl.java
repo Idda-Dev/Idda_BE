@@ -36,8 +36,6 @@ public class MemberServiceImpl implements MemberService {
         response.setProfileImageUrl(member.getProfileImageUrl());
         response.setLocation(member.getLocation());
         response.setLevel(memberMissionProgressRepository.findCurrentLevel(memberId));
-        response.setSuccessCount(memberMissionProgressRepository.getCurrentSuccessCount(memberId));
-        response.setTotalCount(memberMissionProgressRepository.getCurrentTotalCount(memberId));
         response.setCreatedAt(member.getCreatedAt());
 
         return response;
