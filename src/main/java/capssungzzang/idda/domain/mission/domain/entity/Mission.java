@@ -14,6 +14,11 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    indexes = {
+            @Index(name = "idx_mission_member_created", columnList = "member_id, created_at")
+    }
+)
 public class Mission extends BaseEntity {
 
     @Id
