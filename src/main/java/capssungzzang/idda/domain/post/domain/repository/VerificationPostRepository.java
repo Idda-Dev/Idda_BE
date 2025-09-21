@@ -22,6 +22,8 @@ public interface VerificationPostRepository extends JpaRepository<VerificationPo
            coalesce(count(distinct h.id), 0) as hearts,
            coalesce(count(distinct c.id), 0) as comments
     from VerificationPost vp
+    join fetch vp.member m
+    join fetch vp.mission ms
     left join Heart h on h.post = vp
     left join Comment c on c.post = vp
     where vp.location = :location
