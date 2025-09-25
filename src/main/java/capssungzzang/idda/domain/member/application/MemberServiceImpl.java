@@ -50,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
             response.setMemberId(member.getId());
             response.setNickname(member.getNickname());
             response.setNewMember(false);
+            response.setLevelAssigned(memberMissionProgressRepository.existsByMemberId(member.getId()));
 
             return response;
         }

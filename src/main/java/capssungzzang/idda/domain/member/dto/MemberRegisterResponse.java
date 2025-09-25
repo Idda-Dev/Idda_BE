@@ -9,4 +9,5 @@ public class MemberRegisterResponse {
     private Long memberId;
     private String nickname;
     private boolean newMember;
+    private boolean levelAssigned;
 }
