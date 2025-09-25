@@ -3,6 +3,7 @@ package capssungzzang.idda.domain.survey.application;
 import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang.idda.domain.member.domain.entity.Member;
 import capssungzzang.idda.domain.member.domain.entity.MemberMissionProgress;
+import capssungzzang.idda.domain.member.domain.entity.profileimage.ProfileImage;
 import capssungzzang.idda.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.survey.domain.entity.Survey;
@@ -110,6 +111,13 @@ public class SurveyServiceImpl implements SurveyService {
                 .completed(false)
                 .build();
         memberMissionProgressRepository.save(memberMissionProgress);
+
+        switch (level) {
+            case 1 -> member.updateProfileImageUrl(ProfileImage.LV1.getUrl());
+            case 2 -> member.updateProfileImageUrl(ProfileImage.LV2.getUrl());
+            case 3 -> member.updateProfileImageUrl(ProfileImage.LV3.getUrl());
+            case 4 -> member.updateProfileImageUrl(ProfileImage.LV4.getUrl());
+        }
 
         SurveySubmitResponse response = new SurveySubmitResponse();
         response.setNickname(member.getNickname());

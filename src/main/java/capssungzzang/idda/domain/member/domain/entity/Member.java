@@ -39,4 +39,8 @@ public class Member extends BaseEntity {
     public void addCandy(int amount) {
         this.candy += amount;
     }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
 }
