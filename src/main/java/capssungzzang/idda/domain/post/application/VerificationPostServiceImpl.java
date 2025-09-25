@@ -6,6 +6,7 @@ import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang.idda.domain.member.application.MemberService;
 import capssungzzang.idda.domain.member.domain.entity.Member;
 import capssungzzang.idda.domain.member.domain.entity.MemberMissionProgress;
+import capssungzzang.idda.domain.member.domain.entity.profileimage.ProfileImage;
 import capssungzzang.idda.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.mission.domain.entity.Mission;
@@ -157,6 +158,15 @@ public class VerificationPostServiceImpl implements VerificationPostService {
                 .build();
 
         memberMissionProgressRepository.save(newProgress);
+
+        //프로필 설정
+        switch (newProgress.getLevel()) {
+            case 1 -> member.updateProfileImageUrl(ProfileImage.LV1.getUrl());
+            case 2 -> member.updateProfileImageUrl(ProfileImage.LV2.getUrl());
+            case 3 -> member.updateProfileImageUrl(ProfileImage.LV3.getUrl());
+            case 4 -> member.updateProfileImageUrl(ProfileImage.LV4.getUrl());
+            case 5 -> member.updateProfileImageUrl(ProfileImage.LV5.getUrl());
+        }
 
         response.setLevel(newProgress.getLevel());
 
