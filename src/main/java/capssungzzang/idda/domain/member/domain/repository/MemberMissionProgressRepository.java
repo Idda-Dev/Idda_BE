@@ -63,6 +63,5 @@ public interface MemberMissionProgressRepository extends JpaRepository<MemberMis
     Integer getCurrentTotalCount(@Param("memberId") Long memberId);
 
     Optional<MemberMissionProgress> findFirstByMemberIdAndCompletedFalseOrderByLevelDesc(Long memberId);
-
-
+    boolean existsByMemberId(Long memberId);
 }
