@@ -1,6 +1,7 @@
 package capssungzzang.idda.domain.member.application;
 
 import capssungzzang.idda.domain.member.domain.entity.Member;
+import capssungzzang.idda.domain.member.domain.entity.profileimage.ProfileImage;
 import capssungzzang.idda.domain.member.domain.repository.MemberMissionProgressRepository;
 import capssungzzang.idda.domain.member.domain.repository.MemberRepository;
 import capssungzzang.idda.domain.member.dto.MemberRegisterRequest;
@@ -59,7 +60,7 @@ public class MemberServiceImpl implements MemberService {
                 .nickname(request.getNickname())
                 .candy(15)
                 .location("동작구")
-                .profileImageUrl("https://capssungzzang-bucket.s3.ap-northeast-2.amazonaws.com/%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%91%E1%85%B5%E1%86%AF+%E1%84%89%E1%85%A1%E1%84%8C%E1%85%B5%E1%86%AB+%E1%84%86%E1%85%A9%E1%84%8B%E1%85%B3%E1%86%B7/%E1%84%8B%E1%85%B3%E1%86%AB%E1%84%83%E1%85%AE%E1%86%AB%E1%84%8B%E1%85%B5%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%91%E1%85%B5%E1%86%AF%E1%84%89%E1%85%A1%E1%84%8C%E1%85%B5%E1%86%AB.png")
+                .profileImageUrl(ProfileImage.LV1.getUrl())
                 .build();
 
         memberRepository.save(newMember);
