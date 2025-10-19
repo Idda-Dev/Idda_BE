@@ -58,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member newMember = Member.builder()
                 .nickname(request.getNickname())
-                .candy(15)
+                .candy(0)
                 .location("동작구")
                 .profileImageUrl(ProfileImage.LV1.getUrl())
                 .build();

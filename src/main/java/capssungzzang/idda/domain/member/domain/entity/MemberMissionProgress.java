@@ -1,5 +1,6 @@
 package capssungzzang.idda.domain.member.domain.entity;
 
+import capssungzzang.idda.domain.level.domain.entity.LevelRequirement;
 import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
 import capssungzzang.idda.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -38,6 +39,19 @@ public class MemberMissionProgress extends BaseEntity {
 
     public void completeLevel() {
         this.completed = true;
+    }
+
+    public boolean isRequirementMet(LevelRequirement req) {
+        int required = switch (this.difficulty) {
+            case EASY   -> req.getEasyRequired();
+            case NORMAL -> req.getNormalRequired();
+            case HARD   -> req.getHardRequired();
+        };
+        return this.successCount >= required;
+    }
+
+    public void addSuccess() {
+        this.successCount += 1;
     }
 
     @Builder
