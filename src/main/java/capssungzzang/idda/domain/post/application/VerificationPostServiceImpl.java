@@ -154,6 +154,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         //최대 레벨
         if(currentProgress.getLevel() == 5) {
             response.setLevel(5);
+            response.setLevelUp(false);
             return response;
         }
 
@@ -165,6 +166,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         //요구치 미충족
         if (!met) {
             response.setLevel(currentProgress.getLevel());
+            response.setLevelUp(false);
             return response;
         }
 
@@ -189,6 +191,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
             case 5 -> member.updateProfileImageUrl(ProfileImage.LV5.getUrl());
         }
 
+        response.setLevelUp(true);
         response.setLevel(newProgress.getLevel());
 
         return response;

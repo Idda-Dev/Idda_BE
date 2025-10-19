@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class VerificationPostCreateResponse {
     private Long postId;
+    private boolean levelUp;
     private int level;
 }
