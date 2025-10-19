@@ -2,7 +2,9 @@ package capssungzzang.idda.domain.post.application;
 
 import capssungzzang.idda.domain.comment.domain.repository.CommentRepository;
 import capssungzzang.idda.domain.heart.domain.repository.HeartRepository;
+import capssungzzang.idda.domain.level.domain.entity.LevelRequirement;
 import capssungzzang.idda.domain.level.domain.entity.difficulty.Difficulty;
+import capssungzzang.idda.domain.level.domain.repository.LevelRequirementRepository;
 import capssungzzang.idda.domain.member.application.MemberService;
 import capssungzzang.idda.domain.member.domain.entity.Member;
 import capssungzzang.idda.domain.member.domain.entity.MemberMissionProgress;
@@ -46,6 +48,7 @@ public class VerificationPostServiceImpl implements VerificationPostService {
     private final S3StorageService s3StorageService;
     private final CommentRepository commentRepository;
     private final MemberMissionProgressRepository memberMissionProgressRepository;
+    private final LevelRequirementRepository levelRequirementRepository;
 
     @Override
     public List<VerificationPostResponse> getAllVerificationPosts(String location) {
@@ -135,15 +138,33 @@ public class VerificationPostServiceImpl implements VerificationPostService {
         VerificationPostCreateResponse response = new VerificationPostCreateResponse();
         response.setPostId(verificationPost.getId());
 
-        //어흥콘 시연용 자동 승인
+        //k-pass 승인 로직
         mission.achieveMission();
-        member.addCandy(15);
+        switch (mission.getDifficulty()) {
+            case HARD -> member.addCandy(8);
+            case NORMAL -> member.addCandy(6);
+            case EASY -> member.addCandy(4);
+        }
 
         MemberMissionProgress currentProgress = memberMissionProgressRepository.findFirstByMemberIdAndCompletedFalseOrderByLevelDesc(memberId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 정보를 찾을 수 없습니다."));
+
+        currentProgress.addSuccess();
+
         //최대 레벨
         if(currentProgress.getLevel() == 5) {
             response.setLevel(5);
+            return response;
+        }
+
+        LevelRequirement req = levelRequirementRepository.findByLevel(currentProgress.getLevel())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "레벨 요구치가 없습니다."));
+
+        boolean met = currentProgress.isRequirementMet(req);
+
+        //요구치 미충족
+        if (!met) {
+            response.setLevel(currentProgress.getLevel());
             return response;
         }
 
